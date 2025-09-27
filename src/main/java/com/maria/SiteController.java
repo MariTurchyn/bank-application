@@ -31,14 +31,14 @@ public class SiteController {
     public String home(HttpSession http, Model model) {
         String me = session.currentUser(http);
         if (me != null) return "redirect:/dashboard";
-        return "login"; // show login/register page
+        return "login";
     }
 
     // ---------- Auth (very basic) ----------
     @PostMapping("/register")
-    public String register(@RequestParam String username,
-                           @RequestParam String email,
-                           @RequestParam String password,
+    public String register(@RequestParam("username") String username,
+                           @RequestParam("email") String email,
+                           @RequestParam("password") String password,
                            RedirectAttributes ra) {
         try {
             users.registerUser(username.trim(), email.trim(), password);
@@ -50,8 +50,8 @@ public class SiteController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username,
-                        @RequestParam String password,
+    public String login(@RequestParam("username") String username,
+                        @RequestParam("password") String password,
                         HttpSession http,
                         RedirectAttributes ra) {
         if (users.login(username.trim(), password)) {
@@ -70,7 +70,7 @@ public class SiteController {
 
     // ---------- Dashboard ----------
     @GetMapping("/dashboard")
-    public String dashboard(HttpSession http, Model model, RedirectAttributes ra) {
+    public String dashboard(HttpSession http, Model model) {
         String me = session.currentUser(http);
         if (me == null) return "redirect:/";
         List<Account> list = accounts.listForUsername(me);
@@ -81,8 +81,8 @@ public class SiteController {
 
     // ---------- Create account ----------
     @PostMapping("/accounts/create")
-    public String createAccount(@RequestParam String type,
-                                @RequestParam(defaultValue = "USD") String currency,
+    public String createAccount(@RequestParam("type") String type,
+                                @RequestParam(value = "currency", defaultValue = "USD") String currency,
                                 HttpSession http,
                                 RedirectAttributes ra) {
         String me = session.currentUser(http);
@@ -98,8 +98,8 @@ public class SiteController {
 
     // ---------- Deposit / Withdraw ----------
     @PostMapping("/accounts/deposit")
-    public String deposit(@RequestParam String accountNumber,
-                          @RequestParam BigDecimal amount,
+    public String deposit(@RequestParam("accountNumber") String accountNumber,
+                          @RequestParam("amount") BigDecimal amount,
                           RedirectAttributes ra) {
         try {
             accounts.deposit(accountNumber, amount);
@@ -111,8 +111,8 @@ public class SiteController {
     }
 
     @PostMapping("/accounts/withdraw")
-    public String withdraw(@RequestParam String accountNumber,
-                           @RequestParam BigDecimal amount,
+    public String withdraw(@RequestParam("accountNumber") String accountNumber,
+                           @RequestParam("amount") BigDecimal amount,
                            RedirectAttributes ra) {
         try {
             accounts.withdraw(accountNumber, amount);
@@ -125,9 +125,9 @@ public class SiteController {
 
     // ---------- Transfer ----------
     @PostMapping("/accounts/transfer")
-    public String transfer(@RequestParam String from,
-                           @RequestParam String to,
-                           @RequestParam BigDecimal amount,
+    public String transfer(@RequestParam("from") String from,
+                           @RequestParam("to") String to,
+                           @RequestParam("amount") BigDecimal amount,
                            RedirectAttributes ra) {
         try {
             accounts.transfer(from, to, amount);
