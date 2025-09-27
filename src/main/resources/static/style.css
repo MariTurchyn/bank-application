@@ -1,0 +1,106 @@
+/* =========================
+   Design tokens (variables)
+   ========================= */
+:root {
+  --bg:      #f4f6fb;
+  --card:    #ffffff;
+  --text:    #1f2937;
+  --muted:   #6b7280;
+  --accent:  #3b82f6;
+  --err:     #b91c1c;
+  --ok:      #065f46;
+}
+
+/* ==============
+   Base & layout
+   ============== */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.page {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ===========
+   Components
+   =========== */
+.card {
+  background: var(--card);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+  max-width: 980px;
+  width: 100%;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  padding: 12px 16px;
+}
+
+.container {
+  max-width: 980px;
+  margin: 16px auto;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.box {
+  background: var(--card);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+input, select, button {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+}
+
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+button:hover { opacity: .95; }
+
+h1, h2, h3 { margin-top: 0; }
+
+.tbl {
+  width: 100%;
+  border-collapse: collapse;
+}
+.tbl th, .tbl td {
+  padding: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+/* =========
+   Feedback
+   ========= */
+.msg { color: var(--ok);  margin: 8px 0; }
+.err { color: var(--err); margin: 8px 0; }
