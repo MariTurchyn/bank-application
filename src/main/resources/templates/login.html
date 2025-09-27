@@ -1,0 +1,33 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Online Banking – Login</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body class="page">
+<div class="card">
+    <h1>Welcome</h1>
+
+    <p th:if="${msg}" class="msg" th:text="${msg}"></p>
+    <p th:if="${err}" class="err" th:text="${err}"></p>
+
+    <div class="grid-2">
+        <form method="post" action="/login" class="box">
+            <h2>Log in</h2>
+            <label>Username <input name="username" required></label>
+            <label>Password <input name="password" type="password" required></label>
+            <button type="submit">Login</button>
+        </form>
+
+        <form method="post" action="/register" class="box">
+            <h2>Register</h2>
+            <label>Username <input name="username" required></label>
+            <label>Email <input name="email" type="email" required></label>
+            <label>Password <input name="password" type="password" required></label>
+            <button type="submit">Create account</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
