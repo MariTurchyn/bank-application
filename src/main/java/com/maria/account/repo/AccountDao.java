@@ -56,12 +56,44 @@ public class AccountDao {
         );
     }
 
+    /** Find one account by DB id */
+    public Account findById(Long id) {
+        return jdbc.queryForObject(
+                "SELECT * FROM accounts WHERE id = ?",
+                this::mapRow, id
+        );
+    }
+
+    /** Find one account by its human number */
+    public Account findByNumber(String accountNumber) {
+        return jdbc.queryForObject(
+                "SELECT * FROM accounts WHERE account_number = ?",
+                this::mapRow, accountNumber
+        );
+    }
+
+    /** +amount (deposit) */
+    public boolean addToBalance(long id, BigDecimal amount) {
+        int updated = jdbc.update(
+                "UPDATE accounts SET balance = balance + ? WHERE id = ?",
+                amount, id
+        );
+        return updated == 1;
+    }
+
+    /** -amount only if enough money */
+    public boolean subtractIfEnough(long id, BigDecimal amount) {
+        int updated = jdbc.update(
+                "UPDATE accounts SET balance = balance - ? WHERE id = ? AND balance >= ?",
+                amount, id, amount
+        );
+        return updated == 1; // false => insufficient funds or bad id
+    }
+
     // Simple 12-digit account number generator
     private String generateAccountNumber() {
         StringBuilder sb = new StringBuilder(12);
-        for (int i = 0; i < 12; i++) {
-            sb.append(rnd.nextInt(10));
-        }
+        for (int i = 0; i < 12; i++) sb.append(rnd.nextInt(10));
         return sb.toString();
     }
 }
