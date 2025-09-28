@@ -5,93 +5,178 @@
     <title>Online Banking – Dashboard</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
-<body class="page">
-<div class="topbar">
-    <div>👤 <b th:text="${me}"></b></div>
-    <form method="post" action="/logout"><button>Logout</button></form>
-</div>
+<body class="page-dashboard">
 
-<div class="container">
-    <p th:if="${msg}" class="msg" th:text="${msg}"></p>
-    <p th:if="${err}" class="err" th:text="${err}"></p>
+<!-- Frame: sidebar + main -->
+<div class="layout">
 
-    <section class="card">
-        <h2>Your accounts</h2>
-        <table class="tbl">
-            <thead><tr><th>Number</th><th>Type</th><th>Currency</th><th>Balance</th></tr></thead>
-            <tbody>
-            <tr th:each="a : ${accounts}">
-                <td th:text="${a.accountNumber}"></td>
-                <td th:text="${a.type}"></td>
-                <td th:text="${a.currency}"></td>
-                <td th:text="${#numbers.formatDecimal(a.balance, 1, 'COMMA', 2, 'POINT')}"></td>
-            </tr>
-            <tr th:if="${#lists.isEmpty(accounts)}"><td colspan="4">No accounts yet.</td></tr>
-            </tbody>
-        </table>
-    </section>
+    <!-- Sidebar -->
+    <aside class="side">
+        <div class="side__brand">💳</div>
 
-    <div class="grid-3">
-        <!-- Create account -->
-        <form method="post" action="/accounts/create" class="box">
-            <h3>Create account</h3>
-            <label>Type
-                <select name="type">
-                    <option>CHECKING</option>
-                    <option>SAVINGS</option>
-                </select>
-            </label>
-            <label>Currency <input name="currency" value="USD"></label>
-            <button>Create</button>
-        </form>
+        <nav class="side__nav">
+            <a class="side__link side__link--active" href="#">Dashboard</a>
+            <a class="side__link" href="#" onclick="alert('Payments coming soon')">Payments</a>
+            <a class="side__link" href="#" onclick="alert('Cards coming soon')">Cards</a>
+            <a class="side__link" href="#" onclick="alert('Settings coming soon')">Settings</a>
+        </nav>
 
-        <!-- Deposit -->
-        <form method="post" action="/accounts/deposit" class="box">
-            <h3>Deposit</h3>
-            <label>Account
-                <select name="accountNumber" required>
-                    <option th:each="a : ${accounts}" th:value="${a.accountNumber}"
-                            th:text="${a.accountNumber + ' (' + a.type + ')'}"></option>
-                </select>
-            </label>
-            <label>Amount <input name="amount" type="number" step="0.01" min="0.01" required></label>
-            <button>Deposit</button>
-        </form>
-
-        <!-- Withdraw -->
-        <form method="post" action="/accounts/withdraw" class="box">
-            <h3>Withdraw</h3>
-            <label>Account
-                <select name="accountNumber" required>
-                    <option th:each="a : ${accounts}" th:value="${a.accountNumber}"
-                            th:text="${a.accountNumber + ' (' + a.type + ')'}"></option>
-                </select>
-            </label>
-            <label>Amount <input name="amount" type="number" step="0.01" min="0.01" required></label>
-            <button>Withdraw</button>
-        </form>
-    </div>
-
-    <!-- Transfer -->
-    <form method="post" action="/accounts/transfer" class="box">
-        <h3>Transfer</h3>
-        <div class="grid-3">
-            <label>From
-                <select name="from" required>
-                    <option th:each="a : ${accounts}" th:value="${a.accountNumber}"
-                            th:text="${a.accountNumber + ' (' + a.type + ')'}"></option>
-                </select>
-            </label>
-            <label>To
-                <select name="to" required>
-                    <option th:each="a : ${accounts}" th:value="${a.accountNumber}"
-                            th:text="${a.accountNumber + ' (' + a.type + ')'}"></option>
-                </select>
-            </label>
-            <label>Amount <input name="amount" type="number" step="0.01" min="0.01" required></label>
+        <div class="side__user">
+            <div class="avatar" th:text="${#strings.substring(me,0,1).toUpperCase()}">U</div>
+            <div class="side__user-name" th:text="${me}">user</div>
+            <form method="post" action="/logout">
+                <button class="btn btn--ghost btn--xs">Logout</button>
+            </form>
         </div>
-        <button>Transfer</button>
-    </form>
+    </aside>
+
+    <!-- Main -->
+    <main class="main">
+
+        <!-- Header with simple KPIs -->
+        <header class="top">
+            <div>
+                <h1>Dashboard</h1>
+                <p class="muted">Welcome back, <b th:text="${me}">User</b></p>
+            </div>
+
+            <div class="top__metrics">
+                <div class="kpi">
+                    <div class="kpi__label">Total balance</div>
+                    <div id="kpi-total" class="kpi__value">$0.00</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi__label">Accounts</div>
+                    <div class="kpi__value" th:text="${accounts.size()}">0</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Flash messages -->
+        <div th:if="${msg}" class="toast toast--ok" th:text="${msg}"></div>
+        <div th:if="${err}" class="toast toast--err" th:text="${err}"></div>
+
+        <!-- Two columns: left = accounts, right = overview/actions -->
+        <section class="grid grid-3-2">
+
+            <!-- Left: My accounts -->
+            <div class="card">
+                <div class="section-head">
+                    <h2>My accounts</h2>
+                    <form method="post" action="/accounts/create" class="row gap-sm">
+                        <select name="type">
+                            <option>CHECKING</option>
+                            <option>SAVINGS</option>
+                        </select>
+                        <input name="currency" value="USD">
+                        <button class="btn btn--ghost btn--xs">+ Add account</button>
+                    </form>
+                </div>
+
+                <!-- Empty state -->
+                <div class="cards" th:if="${#lists.isEmpty(accounts)}">
+                    <div class="empty">No accounts yet. Use “Add account”.</div>
+                </div>
+
+                <!-- Accounts list -->
+                <div class="cards" th:if="${!#lists.isEmpty(accounts)}">
+                    <article class="acct" th:each="a : ${accounts}">
+
+                        <!-- Basic account info -->
+                        <div class="acct__row">
+                            <div>
+                                <div class="muted">Number</div>
+                                <div class="account__num" th:text="${a.accountNumber}">123456</div>
+                            </div>
+                            <div>
+                                <div class="muted">Type</div>
+                                <div th:text="${a.type}">CHECKING</div>
+                            </div>
+                            <div>
+                                <div class="muted">Currency</div>
+                                <div th:text="${a.currency}">USD</div>
+                            </div>
+                            <div class="account__balance">
+                                <div class="muted">Balance</div>
+                                <div class="money js-balance"
+                                     th:text="${#numbers.formatDecimal(a.balance, 1, 'COMMA', 2, 'POINT')}">0.00</div>
+                            </div>
+                        </div>
+
+                        <!-- Very simple inline actions -->
+                        <div class="row gap-sm wrap">
+                            <!-- Deposit -->
+                            <form method="post" action="/accounts/deposit" class="row gap-sm">
+                                <input type="hidden" name="accountNumber" th:value="${a.accountNumber}">
+                                <input name="amount" type="number" step="0.01" min="0.01" placeholder="Deposit">
+                                <button class="btn btn--ghost btn--xs">Deposit</button>
+                            </form>
+
+                            <!-- Withdraw -->
+                            <form method="post" action="/accounts/withdraw" class="row gap-sm">
+                                <input type="hidden" name="accountNumber" th:value="${a.accountNumber}">
+                                <input name="amount" type="number" step="0.01" min="0.01" placeholder="Withdraw">
+                                <button class="btn btn--ghost btn--xs">Withdraw</button>
+                            </form>
+
+                            <!-- Transfer (only if more than 1 account) -->
+                            <form method="post" action="/accounts/transfer" class="row gap-sm"
+                                  th:if="${accounts.size() > 1}">
+                                <input type="hidden" name="from" th:value="${a.accountNumber}">
+                                <select name="to" required>
+                                    <option th:each="b : ${accounts}"
+                                            th:if="${b.accountNumber != a.accountNumber}"
+                                            th:value="${b.accountNumber}"
+                                            th:text="${b.accountNumber}"></option>
+                                </select>
+                                <input name="amount" type="number" step="0.01" min="0.01" placeholder="Amount">
+                                <button class="btn btn--ghost btn--xs">Transfer</button>
+                            </form>
+                        </div>
+
+                    </article>
+                </div>
+            </div>
+
+            <!-- Right: Overview + simple actions -->
+            <div class="stack">
+                <section class="card">
+                    <div class="section-head"><h2>Overview</h2></div>
+                    <ul class="overview">
+                        <li><span class="muted">Total balance</span> <b id="ov-total">$0.00</b></li>
+                        <li><span class="muted">Accounts</span> <b th:text="${accounts.size()}">0</b></li>
+                    </ul>
+                </section>
+
+                <section class="card">
+                    <div class="section-head"><h2>Quick actions</h2></div>
+                    <div class="quick">
+                        <a class="btn btn--ghost" href="#top" onclick="document.querySelector('.cards')?.scrollIntoView({behavior:'smooth'})">
+                            Go to accounts
+                        </a>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="section-head"><h2>Insights</h2></div>
+                    <div class="empty">Transactions & charts coming soon 👀</div>
+                </section>
+            </div>
+
+        </section>
+    </main>
 </div>
+
+<!-- Tiny JS: compute total balance from .js-balance -->
+<script>
+    const parseVal = el => Number((el.textContent || '0').replace(/,/g, ''));
+    const sum = [...document.querySelectorAll('.js-balance')].map(parseVal).reduce((a,b)=>a+b, 0);
+    const fmt = n => n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const kpi = document.getElementById('kpi-total');
+    const ov  = document.getElementById('ov-total');
+    if (kpi) kpi.textContent = '$' + fmt(sum);
+    if (ov)  ov.textContent  = '$' + fmt(sum);
+</script>
 </body>
 </html>
