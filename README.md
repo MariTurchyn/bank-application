@@ -44,19 +44,41 @@ This project is perfect for showcasing my skills in **Java, Spring Boot, SQL, MV
 git clone https://github.com/YOUR_USERNAME/onlinebanking.git
 cd onlinebanking
 ```
-### 2. Build with Maven
-```bash
-mvn clean package
-```
-### 3. Run the app
+### 2. Build & run with Maven
 ```bash
 mvn spring-boot:run
 ```
-### 4. Open in browser
+
+### 3. Open the database console (H2)
+The app uses an embedded **H2 SQL database** that persists data between runs.
+
+Go to: http://localhost:8080/h2-console
+
+Use the following settings:
+
+**JDBC URL**: jdbc:h2:file:./bankdb
+
+**User**: sa
+
+**Password**: (leave empty)
+
+Here you can run queries like:
 ```bash
-http://localhost:8080/h2-console
+SELECT * FROM ACCOUNTS;
 ```
-JDBC URL: jdbc:h2:file:./bankdb
+### 4. Open the web app in the browser
+Open the app in your browser:
+   http://localhost:8080/
+
+   - Register a new user on the landing page
+   - Then log in with the same credentials
+   - You’ll be redirected to the Dashboard automatically
+   - 
+Here you can:
+
+- See your accounts and balances
+- Deposit, withdraw, or transfer money
+- Add new accounts
 
 --- 
 
