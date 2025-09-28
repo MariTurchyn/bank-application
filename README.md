@@ -110,3 +110,23 @@ This project demonstrates:
 - 📊 A responsive **dashboard UI** styled like a real banking system  
 
 It’s a **mini real-world banking app** that shows both **backend skills** (Spring, REST, SQL) and **frontend skills** (Thymeleaf, CSS) in one project.
+
+## Screenshots
+---
+<img width="939" height="829" alt="image" src="https://github.com/user-attachments/assets/1c61e632-a6cc-475d-98f1-ccf18a5e5182" />
+
+---
+<img width="945" height="846" alt="image" src="https://github.com/user-attachments/assets/36ff23e5-7795-45f4-8d75-5c6895646685" />
+
+---
+<img width="1899" height="855" alt="image" src="https://github.com/user-attachments/assets/c863497d-80dc-4abc-adc0-7adc5b888cf2" />
+
+---
+
+<img width="1889" height="781" alt="image" src="https://github.com/user-attachments/assets/c79e50e4-475c-4cb5-99a7-9b8685a0fcfd" />
+
+---
+
+<img width="1139" height="484" alt="image" src="https://github.com/user-attachments/assets/209f848b-0e0b-49d6-8804-a5e1bef2a975" />
+
+
