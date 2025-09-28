@@ -68,6 +68,14 @@ public class SiteController {
         return "redirect:/";
     }
 
+    @GetMapping("/login")
+    public String loginPage(HttpSession http) {
+        String me = session.currentUser(http);
+        if (me != null) return "redirect:/dashboard";
+        return "login";
+    }
+
+
     // ---------- Dashboard ----------
     @GetMapping("/dashboard")
     public String dashboard(HttpSession http, Model model) {
